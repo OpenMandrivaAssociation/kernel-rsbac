@@ -34,41 +34,20 @@
 # Patch tarball tag
 %define ktag		aleph
 
-%define	manbo_distsuffix	aleph
-# Handle manbo release
-%if "%{?manbo_mkrel:has_manbo}" == "has_manbo"
-
-%define rpmtag		%manbo_distsuffix
-%if %kpatch
-%if %kgit
-%define	rpmrel		%manbo_mkrel 0.%{kpatch}.%{kgit}.%{mnbrel}%{?uclevel:.%{uclevel}}
-%else
-%define	rpmrel		%manbo_mkrel 0.%{kpatch}.%{mnbrel}%{?uclevel:.%{uclevel}}
-%endif
-%else
-%define	rpmrel		%manbo_mkrel %{mnbrel}%{?uclevel:.%{uclevel}}
-%endif
-%define	fakerel		%manbo_mkrel 1
-
-%else
-
 %define rpmtag		%distsuffix
 %if %kpatch
 %if %kgit
-%define	rpmrel		%mkrel 0.%{kpatch}.%{kgit}.%{mnbrel}%{?uclevel:.%{uclevel}}
+%define rpmrel		%mkrel 0.%{kpatch}.%{kgit}.%{rsbacrel}
 %else
-%define	rpmrel		%mkrel 0.%{kpatch}.%{mnbrel}%{?uclevel:.%{uclevel}}
+%define rpmrel		%mkrel 0.%{kpatch}.%{rsbacrel}
 %endif
 %else
-%define	rpmrel		%mkrel %{mnbrel}%{?uclevel:.%{uclevel}}
-%endif
-%define	fakerel		%mkrel 1
-
+%define rpmrel		%mkrel %{rsbacrel}
 %endif
 
-# fakerel above and fakever below never change, they are used to fool
-# rpm/urpmi/smart
+# theese two never change, they are used to fool rpm/urpmi/smart
 %define fakever		1
+%define fakerel		%mkrel 1
 
 # When we are using a pre/rc patch, the tarball is a sublevel -1
 %if %kpatch
