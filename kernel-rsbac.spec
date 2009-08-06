@@ -12,7 +12,7 @@
 %define sublevel	30
 
 # Package release
-%define rsbacrel		1
+%define kbuild		2
 %define	rsbacver	1.4.2
 %define rsbacpatch	patch-linux-2.6.30.3-rsbac-1.4.2.diff.bz2
 
@@ -28,64 +28,62 @@
 #define uclevel uc1
 %define devel_notice %{?uclevel:NOTE: This is work-in-progress (WIP) development kernel.}
 
-# kernel base name (also name of srpm)
-%define kname		kernel-rsbac
-
 # Patch tarball tag
-%define ktag		aleph
+%define ktag		rsbac
+%define kname 		kernel-%{ktag}
 
 %define rpmtag		%distsuffix
 %if %kpatch
 %if %kgit
-%define rpmrel		%mkrel 0.%{kpatch}.%{kgit}.%{rsbacrel}
+%define rpmrel		%mkrel 0.%{kpatch}.%{kgit}.%{kbuild}
 %else
-%define rpmrel		%mkrel 0.%{kpatch}.%{rsbacrel}
+%define rpmrel		%mkrel 0.%{kpatch}.%{kbuild}
 %endif
 %else
-%define rpmrel		%mkrel %{rsbacrel}
+%define rpmrel		%mkrel %{kbuild}
 %endif
 
-# these two never change, they are used to fool rpm/urpmi/smart
+# theese two never change, they are used to fool rpm/urpmi/smart
 %define fakever		1
 %define fakerel		%mkrel 1
 
 # When we are using a pre/rc patch, the tarball is a sublevel -1
 %if %kpatch
-%define kversion	%{kernelversion}.%{patchlevel}.%{sublevel}
-%define tar_ver		%{kernelversion}.%{patchlevel}.%(expr %{sublevel} - 1)
-%define patch_ver 	%{kversion}-%{kpatch}-%{ktag}%{rsbacrel}
+%define kversion  	%{kernelversion}.%{patchlevel}.%{sublevel}
+%define tar_ver	  	%{kernelversion}.%{patchlevel}.%(expr %{sublevel} - 1)
+%define patch_ver 	%{kversion}-%{kpatch}-%{ktag}%{kbuild}
 %else
 %if %kstable
-%define kversion	%{kernelversion}.%{patchlevel}.%{sublevel}.%{kstable}
+%define kversion  	%{kernelversion}.%{patchlevel}.%{sublevel}.%{kstable}
 %define tar_ver   	%{kernelversion}.%{patchlevel}.%{sublevel}
 %else
 %define kversion  	%{kernelversion}.%{patchlevel}.%{sublevel}
 %define tar_ver   	%{kversion}
 %endif
-%define patch_ver 	%{kversion}-%{ktag}%{rsbacrel}
+%define patch_ver 	%{kversion}-%{ktag}%{kbuild}
 %endif
 %define kverrel   	%{kversion}-%{rpmrel}
 
-# Used for not making too long names for rpms or search paths
+# used for not making too long names for rpms or search paths 
 %if %kpatch
 %if %kgit
-%define buildrpmrel     0.%{kpatch}.%{kgit}.%{rsbacrel}%{?uclevel:.%{uclevel}}%{rpmtag}
+%define buildrpmrel     0.%{kpatch}.%{kgit}.%{kbuild}%{?uclevel:.%{uclevel}}%{rpmtag}
 %else
-%define buildrpmrel     0.%{kpatch}.%{rsbacrel}%{?uclevel:.%{uclevel}}%{rpmtag}
+%define buildrpmrel     0.%{kpatch}.%{kbuild}%{?uclevel:.%{uclevel}}%{rpmtag}
 %endif
 %else
-%define buildrpmrel     %{rsbacrel}%{?uclevel:.%{uclevel}}%{rpmtag}
+%define buildrpmrel     %{kbuild}%{?uclevel:.%{uclevel}}%{rpmtag}
 %endif
 %define buildrel     	%{kversion}-%{buildrpmrel}
 
-# Having different top level names for packges means that you have to remove
+# having different top level names for packges means that you have to remove
 # them by hard :(
 %define top_dir_name 	%{kname}-%{_arch}
 
 %define build_dir 	${RPM_BUILD_DIR}/%{top_dir_name}
 %define src_dir 	%{build_dir}/linux-%{tar_ver}
 
-# Disable useless debug rpms...
+# disable useless debug rpms...
 %define _enable_debug_packages 	%{nil}
 %define debug_package 		%{nil}
 
@@ -194,14 +192,14 @@ Source10: 	ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}
 %endif
 %if %kgit
 Patch2:		ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/snapshots/patch-%{kernelversion}.%{patchlevel}.%{sublevel}-%{kpatch}-git%{kgit}.bz2
-Source11: 	ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/snapshots/patch-%{kernelversion}.%{patchlevel}.%{sublevel}-%{kpatch}-git%{kgit}.bz2.sign
+Source11:	ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/snapshots/patch-%{kernelversion}.%{patchlevel}.%{sublevel}-%{kpatch}-git%{kgit}.bz2.sign
 %endif
 %if %kstable
 Patch1:   	ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/patch-%{kversion}.bz2
 Source10: 	ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/patch-%{kversion}.bz2.sign
 %endif
 
-Patch200:	%{rsbacpatch}
+#Patch200:	%{rsbacpatch}
 Source201:	kernel-rsbac.config
 Source202:	http://download.rsbac.org/code/%{rsbacver}/changes-%{rsbacver}.txt
 
@@ -217,7 +215,7 @@ input and output, etc.
 
 %define common_description_info For instructions for update, see:	\
 http://www.mandriva.com/en/security/kernelupdate			\
-This kernel indulde the RSBAC system. RSBAC is a flexible, powerful and \
+This kernel include the RSBAC system. RSBAC is a flexible, powerful and \
 fast (low overhead) open source access control framework for Linux kernels \
 but this security solution is a very complex system: \
 please don't use this kernel by newbie user. \
@@ -614,12 +612,14 @@ for I in `find %{patches_dir}/configs/ -type f` ; do
 done
 cat %{SOURCE201} >> .config
 sed 's/^.*CONFIG_CRYPTO_SHA1=.*$/CONFIG_CRYPTO_SHA1=y/' -i .config
-%patch200 -p1
+#%patch200 -p1
 cat %{SOURCE202} > Documentation/changes-%{rsbacver}.txt
 #
 
 %{patches_dir}/scripts/apply_patches
+
 # PATCH END
+
 
 #
 # Setup Begin
@@ -721,6 +721,7 @@ BuildKernel() {
 	# remove /lib/firmware, we use a separate kernel-firmware
 	rm -rf %{temp_root}/lib/firmware
 }
+
 
 SaveDevel() {
 	devel_flavour=$1
