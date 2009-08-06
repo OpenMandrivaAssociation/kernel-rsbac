@@ -45,7 +45,7 @@
 %define rpmrel		%mkrel %{rsbacrel}
 %endif
 
-# theese two never change, they are used to fool rpm/urpmi/smart
+# these two never change, they are used to fool rpm/urpmi/smart
 %define fakever		1
 %define fakerel		%mkrel 1
 
