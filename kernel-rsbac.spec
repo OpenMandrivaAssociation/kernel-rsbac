@@ -12,7 +12,7 @@
 %define sublevel	30
 
 # Package release
-%define kbuild		2
+%define kbuild		3
 %define	rsbacver	1.4.2
 %define rsbacpatch	patch-linux-2.6.30.3-rsbac-1.4.2.diff.bz2
 
