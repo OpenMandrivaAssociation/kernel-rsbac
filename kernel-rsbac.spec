@@ -12,15 +12,14 @@
 %define sublevel	30
 
 # Package release
-%define kbuild		3
+%define kbuild		1
 %define	rsbacver	1.4.2
-%define rsbacpatch	patch-linux-2.6.30.3-rsbac-1.4.2.diff.bz2
 
 # kernel Makefile extraversion is substituted by 
 # kpatch/kgit/kstable wich are either 0 (empty), rc (kpatch), git (kgit) 
 # or stable release (kstable)
 %define kpatch		0
-%define kstable		4
+%define kstable		5
 # kernel.org -gitX patch (only the number after "git")
 %define kgit		0
 
@@ -176,6 +175,9 @@ Source5: 	README.MandrivaLinux
 
 Source100: 	linux-%{patch_ver}.tar.bz2
 
+Source200:	kernel-rsbac.config
+Source201:	http://download.rsbac.org/code/%{rsbacver}/changes-%{rsbacver}.txt
+
 ####################################################################
 #
 # Patches
@@ -186,22 +188,18 @@ Source100: 	linux-%{patch_ver}.tar.bz2
 
 # Pre linus patch: ftp://ftp.kernel.org/pub/linux/kernel/v2.6/testing
 
-%if %kpatch
-Patch1:		ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/testing/patch-%{kernelversion}.%{patchlevel}.%{sublevel}-%{kpatch}.bz2
-Source10: 	ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/testing/patch-%{kernelversion}.%{patchlevel}.%{sublevel}-%{kpatch}.bz2.sign
-%endif
-%if %kgit
-Patch2:		ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/snapshots/patch-%{kernelversion}.%{patchlevel}.%{sublevel}-%{kpatch}-git%{kgit}.bz2
-Source11:	ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/snapshots/patch-%{kernelversion}.%{patchlevel}.%{sublevel}-%{kpatch}-git%{kgit}.bz2.sign
-%endif
-%if %kstable
-Patch1:   	ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/patch-%{kversion}.bz2
-Source10: 	ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/patch-%{kversion}.bz2.sign
-%endif
-
-#Patch200:	%{rsbacpatch}
-Source201:	kernel-rsbac.config
-Source202:	http://download.rsbac.org/code/%{rsbacver}/changes-%{rsbacver}.txt
+#%if %kpatch
+#Patch1:		ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/testing/patch-%{kernelversion}.%{patchlevel}.%{sublevel}-%{kpatch}.bz2
+#Source10: 	ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/testing/patch-%{kernelversion}.%{patchlevel}.%{sublevel}-%{kpatch}.bz2.sign
+#%endif
+#%if %kgit
+#Patch2:		ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/snapshots/patch-%{kernelversion}.%{patchlevel}.%{sublevel}-%{kpatch}-git%{kgit}.bz2
+#Source11:	ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/snapshots/patch-%{kernelversion}.%{patchlevel}.%{sublevel}-%{kpatch}-git%{kgit}.bz2.sign
+#%endif
+#%if %kstable
+#Patch1:   	ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/patch-%{kversion}.bz2
+#Source10: 	ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/patch-%{kversion}.bz2.sign
+#%endif
 
 #END
 ####################################################################
@@ -398,6 +396,15 @@ latest %{kname}-%{1}-debug installed...			\
 %common_description_info				\
 							\
 %post -n %{kname}-%{1}-%{buildrel} -f kernel_files.%{1}-post \
+cat << EOF						\
+Please add to the kernel parameters this options 	\
+to the successful first boot:				\
+rsbac_softmode rsbac_um_no_excl				\
+..and please read the Documentation/rsbac/README-kernparam file	\
+the more information.					\
+Thank you: Gergely Lónyai				\
+EOF							\
+							\
 %preun -n %{kname}-%{1}-%{buildrel} -f kernel_files.%{1}-preun \
 %postun -n %{kname}-%{1}-%{buildrel} -f kernel_files.%{1}-postun \
 							\
@@ -588,32 +595,29 @@ Linux kernel modules at load time.
 #
 %prep
 %setup -q -n %top_dir_name -c
-# RSBAC
 %setup -q -n %top_dir_name -D -T -a100
-#
 
 %define patches_dir ../%{patch_ver}/
 
 cd %src_dir
-%if %kpatch
-%patch1 -p1
-%endif
-%if %kgit
-%patch2 -p1
-%endif
-%if %kstable
-%patch1 -p1
-%endif
+#%if %kpatch
+#%patch1 -p1
+#%endif
+#%if %kgit
+#%patch2 -p1
+#%endif
+#%if %kstable
+#%patch1 -p1
+#%endif
 
 #RSBAC
 for I in `find %{patches_dir}/configs/ -type f` ; do
 	sed 's/^.*CONFIG_CRYPTO_SHA1=.*$/CONFIG_CRYPTO_SHA1=y/' -i ${I}
-	cat %{SOURCE201} >> ${I}
+	cat %{SOURCE200} >> ${I}
 done
-cat %{SOURCE201} >> .config
+cat %{SOURCE200} >> .config
 sed 's/^.*CONFIG_CRYPTO_SHA1=.*$/CONFIG_CRYPTO_SHA1=y/' -i .config
-#%patch200 -p1
-cat %{SOURCE202} > Documentation/changes-%{rsbacver}.txt
+cat %{SOURCE201} > Documentation/changes-%{rsbacver}.txt
 #
 
 %{patches_dir}/scripts/apply_patches
