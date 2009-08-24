@@ -12,7 +12,7 @@
 %define sublevel	30
 
 # Package release
-%define kbuild		1
+%define kbuild		2
 %define	rsbacver	1.4.2
 
 # kernel Makefile extraversion is substituted by 
@@ -188,18 +188,18 @@ Source201:	http://download.rsbac.org/code/%{rsbacver}/changes-%{rsbacver}.txt
 
 # Pre linus patch: ftp://ftp.kernel.org/pub/linux/kernel/v2.6/testing
 
-#%if %kpatch
-#Patch1:		ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/testing/patch-%{kernelversion}.%{patchlevel}.%{sublevel}-%{kpatch}.bz2
-#Source10: 	ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/testing/patch-%{kernelversion}.%{patchlevel}.%{sublevel}-%{kpatch}.bz2.sign
-#%endif
-#%if %kgit
-#Patch2:		ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/snapshots/patch-%{kernelversion}.%{patchlevel}.%{sublevel}-%{kpatch}-git%{kgit}.bz2
-#Source11:	ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/snapshots/patch-%{kernelversion}.%{patchlevel}.%{sublevel}-%{kpatch}-git%{kgit}.bz2.sign
-#%endif
-#%if %kstable
-#Patch1:   	ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/patch-%{kversion}.bz2
-#Source10: 	ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/patch-%{kversion}.bz2.sign
-#%endif
+%if %kpatch
+Patch1:		ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/testing/patch-%{kernelversion}.%{patchlevel}.%{sublevel}-%{kpatch}.bz2
+Source10: 	ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/testing/patch-%{kernelversion}.%{patchlevel}.%{sublevel}-%{kpatch}.bz2.sign
+%endif
+%if %kgit
+Patch2:		ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/snapshots/patch-%{kernelversion}.%{patchlevel}.%{sublevel}-%{kpatch}-git%{kgit}.bz2
+Source11:	ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/snapshots/patch-%{kernelversion}.%{patchlevel}.%{sublevel}-%{kpatch}-git%{kgit}.bz2.sign
+%endif
+%if %kstable
+Patch1:   	ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/patch-%{kversion}.bz2
+Source10: 	ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/patch-%{kversion}.bz2.sign
+%endif
 
 #END
 ####################################################################
@@ -494,6 +494,7 @@ processor mode, use the "nosmp" boot parameter.
 %mkflavour server
 %endif
 
+%if %build_source
 #
 # kernel-source
 #
@@ -567,7 +568,9 @@ This package is a virtual rpm that aims to make sure you always have the
 latest %{kname}-source installed...
 
 %common_description_info
+%endif
 
+%if %build_doc
 #
 # kernel-doc: documentation for the Linux kernel
 #
@@ -589,6 +592,7 @@ this package if you need a reference to the options that can be passed to
 Linux kernel modules at load time.
 
 %common_description_info
+%endif
 
 #
 # End packages - here begins build stage
@@ -600,15 +604,15 @@ Linux kernel modules at load time.
 %define patches_dir ../%{patch_ver}/
 
 cd %src_dir
-#%if %kpatch
-#%patch1 -p1
-#%endif
-#%if %kgit
-#%patch2 -p1
-#%endif
-#%if %kstable
-#%patch1 -p1
-#%endif
+%if %kpatch
+%patch1 -p1
+%endif
+%if %kgit
+%patch2 -p1
+%endif
+%if %kstable
+%patch1 -p1
+%endif
 
 #RSBAC
 for I in `find %{patches_dir}/configs/ -type f` ; do
