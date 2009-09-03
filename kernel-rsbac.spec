@@ -260,23 +260,6 @@ the default %{kname} during the transition to the new naming scheme.
 %files -n %{kname}-%{buildrel}
 %defattr(-,root,root)
 
-# Define obsolete/provides to help automatic upgrades of old kernel
-# flavours to the new ones. Can probably be removed when 2007.1 gets EOL.
-# And have desktop kernel replace laptop one that is no longer built
-%define latest_obsoletes_desktop kernel-latest < 2.6.22-7, kernel-laptop-latest < 2.6.25
-%define latest_provides_desktop kernel-latest = %{kverrel}, kernel-laptop-latest = %{kverrel}
-%ifarch %{ix86}
-%define latest_obsoletes_desktop586 kernel-legacy-latest < 2.6.22-7
-%define latest_provides_desktop586 kernel-legacy-latest = %{kverrel}
-%define latest_obsoletes_server kernel-enterprise-latest < 2.6.22-7
-%define latest_provides_server kernel-enterprise-latest = %{kverrel}
-%endif
-# Make kernel-desktop-devel-latest obsolete kernel-source-stripped-latest
-# it's not a perfect match, but it's better than full source, and it does work
-# And have desktop kernel-devel replace old laptop one
-%define latest_obsoletes_devel_desktop kernel-source-stripped-latest < 2.6.22-7, kernel-laptop-devel-latest < 2.6.25
-%define latest_provides_devel_desktop kernel-source-stripped-latest = %{kverrel}, kernel-laptop-devel-latest = %{kverrel}
-
 # mkflavour() name flavour processor
 # name: the flavour name in the package name
 # flavour: first parameter of CreateKernel()
@@ -351,8 +334,6 @@ Requires:	%{kname}-%{1}-%{buildrel}		\
 %ifarch %{ix86}						\
 Conflicts:	arch(x86_64)				\
 %endif							\
-%{expand:%%{?latest_obsoletes_%{1}:Obsoletes: %{latest_obsoletes_%{1}}}} \
-%{expand:%%{?latest_provides_%{1}:Provides: %{latest_provides_%{1}}}} \
 %description -n %{kname}-%{1}-latest			\
 This package is a virtual rpm that aims to make sure you always have the \
 latest %{kname}-%{1} installed...			\
@@ -370,8 +351,6 @@ Conflicts:	arch(x86_64)				\
 %endif							\
 Provides:	%{kname}-devel-latest			\
 Provides:	kernel-devel-latest			\
-%{expand:%%{?latest_obsoletes_devel_%{1}:Obsoletes: %{latest_obsoletes_devel_%{1}}}} \
-%{expand:%%{?latest_provides_devel_%{1}:Provides: %{latest_provides_devel_%{1}}}} \
 %description -n %{kname}-%{1}-devel-latest		\
 This package is a virtual rpm that aims to make sure you always have the \
 latest %{kname}-%{1}-devel installed...			\
