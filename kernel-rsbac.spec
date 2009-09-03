@@ -144,7 +144,7 @@
 #
 # SRC RPM description
 #
-Summary: 	Linux kernel built for RSBAC
+Summary: 	Hardened Linux kernel with RSBAC enhancement
 Name:		%{kname}
 Version: 	%{kversion}
 Release: 	%{rpmrel}
@@ -412,7 +412,7 @@ EOF							\
 #
 
 %if %build_desktop586
-%define summary_desktop586 Linux kernel for desktop use with i586 & 4GB RAM
+%define summary_desktop586 Hardened Linux kernel for desktop use with i586 & 4GB RAM RAM and enhanced by RSBAC
 %define info_desktop586 This kernel is compiled for desktop use, single or \
 multiple i586 processor(s)/core(s) and less than 4GB RAM, using voluntary \
 preempt, CFS cpu scheduler and cfq i/o scheduler. \
@@ -429,7 +429,7 @@ processor mode, use the "nosmp" boot parameter.
 
 %if %build_desktop
 %ifarch %{ix86}
-%define summary_desktop Linux Kernel for desktop use with i686 & 4GB RAM
+%define summary_desktop Hardened Linux Kernel for desktop use with i686 & 4GB RAM and enhanced by RSBAC
 %define info_desktop This kernel is compiled for desktop use, single or \
 multiple i686 processor(s)/core(s) and less than 4GB RAM, using HZ_1000, \
 voluntary preempt, CFS cpu scheduler and cfq i/o scheduler. \
@@ -437,7 +437,7 @@ This kernel relies on in-kernel smp alternatives to switch between up & smp \
 mode depending on detected hardware. To force the kernel to boot in single \
 processor mode, use the "nosmp" boot parameter.
 %else
-%define summary_desktop Linux Kernel for desktop use with %{_arch}
+%define summary_desktop Hardened Linux Kernel for desktop use with %{_arch} and enhanced by RSBAC
 %define info_desktop This kernel is compiled for desktop use, single or \
 multiple %{_arch} processor(s)/core(s), using HZ_1000, voluntary preempt, \
 CFS cpu scheduler and cfq i/o scheduler. \
@@ -454,7 +454,7 @@ processor mode, use the "nosmp" boot parameter.
 
 %if %build_server
 %ifarch %{ix86}
-%define summary_server Linux Kernel for server use with i686 & 64GB RAM
+%define summary_server Hardened Linux Kernel for server use with i686 & 64GB RAM and enhanced by RSBAC
 %define info_server This kernel is compiled for server use, single or \
 multiple i686 processor(s)/core(s) and up to 64GB RAM using PAE, using \
 no preempt, HZ_100, CFS cpu scheduler and cfq i/o scheduler. \
@@ -462,7 +462,7 @@ This kernel relies on in-kernel smp alternatives to switch between up & smp \
 mode depending on detected hardware. To force the kernel to boot in single \
 processor mode, use the "nosmp" boot parameter.
 %else
-%define summary_server Linux Kernel for server use with %{_arch}
+%define summary_server Hardened Linux Kernel for server use with %{_arch} and enhanced by RSBAC
 %define info_server This kernel is compiled for server use, single or \
 multiple %{_arch} processor(s)/core(s), using no preempt, HZ_100, \
 CFS cpu scheduler and cfq i/o scheduler. \
