@@ -12,7 +12,7 @@
 %define sublevel	30
 
 # Package release
-%define kbuild		3
+%define kbuild		4
 %define	rsbacver	1.4.2
 
 # kernel Makefile extraversion is substituted by 
