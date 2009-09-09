@@ -12,14 +12,14 @@
 %define sublevel	30
 
 # Package release
-%define kbuild		6
+%define kbuild		1
 %define	rsbacver	1.4.2
 
 # kernel Makefile extraversion is substituted by 
 # kpatch/kgit/kstable wich are either 0 (empty), rc (kpatch), git (kgit) 
 # or stable release (kstable)
 %define kpatch		0
-%define kstable		5
+%define kstable		6
 # kernel.org -gitX patch (only the number after "git")
 %define kgit		0
 
