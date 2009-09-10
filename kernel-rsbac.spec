@@ -9,7 +9,7 @@
 #
 %define kernelversion	2
 %define patchlevel	6
-%define sublevel	30
+%define sublevel	31
 
 # Package release
 %define kbuild		1
@@ -19,7 +19,7 @@
 # kpatch/kgit/kstable wich are either 0 (empty), rc (kpatch), git (kgit) 
 # or stable release (kstable)
 %define kpatch		0
-%define kstable		6
+%define kstable		0
 # kernel.org -gitX patch (only the number after "git")
 %define kgit		0
 
