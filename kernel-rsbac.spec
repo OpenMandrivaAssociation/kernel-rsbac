@@ -177,6 +177,7 @@ Source100: 	linux-%{patch_ver}.tar.bz2
 
 Source200:	kernel-rsbac.config
 Source201:	http://download.rsbac.org/code/%{rsbacver}/changes-%{rsbacver}.txt
+Source202:	http://download.rsbac.org/pre/%{kernelversion}-%{patchlevel}-%{sublevel}/rsbac-common-%{kernelversion}.%{patchlevel}-%{rsbacver}.tar.bz2
 
 ####################################################################
 #
@@ -601,6 +602,7 @@ done
 cat %{SOURCE200} >> .config
 sed 's/^.*CONFIG_CRYPTO_SHA1=.*$/CONFIG_CRYPTO_SHA1=y/' -i .config
 cat %{SOURCE201} > Documentation/changes-%{rsbacver}.txt
+%setup -q -n %top_dir_name/linux-%{tar_ver} -D -a202
 #
 
 %{patches_dir}/scripts/apply_patches
