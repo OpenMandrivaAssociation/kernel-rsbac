@@ -12,7 +12,7 @@
 %define sublevel	31
 
 # Package release
-%define kbuild		1
+%define kbuild		2
 %define	rsbacver	1.4.2
 
 # kernel Makefile extraversion is substituted by 
@@ -176,8 +176,9 @@ Source5: 	README.MandrivaLinux
 Source100: 	linux-%{patch_ver}.tar.bz2
 
 Source200:	kernel-rsbac.config
-Source201:	http://download.rsbac.org/code/%{rsbacver}/changes-%{rsbacver}.txt
-Source202:	http://download.rsbac.org/pre/%{kernelversion}-%{patchlevel}-%{sublevel}/rsbac-common-%{kernelversion}.%{patchlevel}-%{rsbacver}.tar.bz2
+Source201:	http://download.rsbac.org/code/%{rsbacver}/%{kernelversion}/rsbac-common-%{kernelversion}.%{patchlevel}-%{rsbacver}.tar.bz2
+Source202:	http://download.rsbac.org/code/%{rsbacver}/changes-%{rsbacver}.txt
+Source203:	http://download.rsbac.org/code/%{rsbacver}/admin-changes-%{rsbacver}.txt
 
 ####################################################################
 #
@@ -579,6 +580,9 @@ Linux kernel modules at load time.
 #
 %prep
 %setup -q -n %top_dir_name -c
+#RSBAC
+%setup -q -n %top_dir_name/linux-%{tar_ver} -D -T -a201
+#
 %setup -q -n %top_dir_name -D -T -a100
 
 %define patches_dir ../%{patch_ver}/
@@ -601,8 +605,8 @@ for I in `find %{patches_dir}/configs/ -type f` ; do
 done
 cat %{SOURCE200} >> .config
 sed 's/^.*CONFIG_CRYPTO_SHA1=.*$/CONFIG_CRYPTO_SHA1=y/' -i .config
-cat %{SOURCE201} > Documentation/changes-%{rsbacver}.txt
-%setup -q -n %top_dir_name/linux-%{tar_ver} -D -a202
+cat %{SOURCE202} > Documentation/rsbac/changes-%{rsbacver}.txt
+cat %{SOURCE203} > Documentation/rsbac/admin-changes-%{rsbacver}.txt
 #
 
 %{patches_dir}/scripts/apply_patches
