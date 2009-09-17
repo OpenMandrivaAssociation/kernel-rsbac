@@ -867,6 +867,7 @@ $DevelRoot/samples
 $DevelRoot/scripts
 $DevelRoot/security
 $DevelRoot/sound
+$DevelRoot/tools
 $DevelRoot/usr
 $DevelRoot/.config
 $DevelRoot/Kbuild
@@ -1246,6 +1247,7 @@ rm -rf %{buildroot}
 %{_kerneldir}/scripts
 %{_kerneldir}/security
 %{_kerneldir}/sound
+%{_kerneldir}/tools
 %{_kerneldir}/usr
 %{_kerneldir}/COPYING
 %{_kerneldir}/CREDITS
