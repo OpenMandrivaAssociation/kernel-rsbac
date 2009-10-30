@@ -19,7 +19,7 @@
 # kpatch/kgit/kstable wich are either 0 (empty), rc (kpatch), git (kgit) 
 # or stable release (kstable)
 %define kpatch		0
-%define kstable		4
+%define kstable		5
 # kernel.org -gitX patch (only the number after "git")
 %define kgit		0
 
@@ -42,7 +42,8 @@
 %define rpmrel		%mkrel %{kbuild}
 %endif
 
-# theese two never change, they are used to fool rpm/urpmi/smart
+# fakerel above and fakever below never change, they are used to fool
+# rpm/urpmi/smart
 %define fakever		1
 %define fakerel		%mkrel 1
 
@@ -90,9 +91,16 @@
 %define build_doc 		1
 %define build_source 		1
 %define build_devel 		1
-%define build_debug 		1
 
-# Build desktop i586 / 1GB
+# Make kernel packages backportable
+%if %{mdkversion} < 201000
+# disable debug rpms for backports, it's enough already having them on cooker/stable
+%define build_debug            0
+%else
+%define build_debug            1
+%endif
+
+# Build desktop i586 / 4GB
 %ifarch %{ix86}
 %define build_desktop586	1
 %endif
@@ -629,6 +637,13 @@ cat %{SOURCE203} > Documentation/rsbac/admin-changes-%{rsbacver}.txt
 
 # Prepare all the variables for calling create_configs
 
+# Make kernel packages backportable
+%if %{mdkversion} < 201000
+# disable modesetting by default, no plymouth for distros < 2010.0
+sed -i  's/\(CONFIG_DRM_[A-Z0-9]\+_KMS\)=y/# \1 is not set/' \
+        %{patches_dir}/configs/*.config
+%endif
+
 %if %build_debug
 %define debug --debug
 %else
@@ -756,6 +771,8 @@ SaveDevel() {
 
 	# Needed for lirc_gpio (#39004)
 	cp -fR drivers/media/video/bt8xx/bttv{,p}.h $TempDevelRoot/drivers/media/video/bt8xx/
+	cp -fR drivers/media/video/bt8xx/bt848.h $TempDevelRoot/drivers/media/video/bt8xx/
+	cp -fR drivers/media/video/btcx-risc.h $TempDevelRoot/drivers/media/video/
 
 	# Needed for external dvb tree (#41418)
 	cp -fR drivers/media/dvb/dvb-core/*.h $TempDevelRoot/drivers/media/dvb/dvb-core/
@@ -1161,7 +1178,7 @@ done
 
 for i in *; do
 	pushd $i
-	echo "Creating module.description for $i"
+	echo "Creating modules.description for $i"
 	modules=`find . -name "*.ko.gz"`
 	echo $modules | %kxargs /sbin/modinfo \
 	| perl -lne 'print "$name\t$1" if $name && /^description:\s*(.*)/; $name = $1 if m!^filename:\s*(.*)\.k?o!; $name =~ s!.*/!!' > modules.description
