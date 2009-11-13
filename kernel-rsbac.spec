@@ -12,8 +12,8 @@
 %define sublevel	31
 
 # Package release
-%define kbuild		1
-%define	rsbacver	1.4.2
+%define kbuild		2
+%define	rsbacver	1.4.3
 
 # kernel Makefile extraversion is substituted by 
 # kpatch/kgit/kstable wich are either 0 (empty), rc (kpatch), git (kgit) 
@@ -185,8 +185,10 @@ Source100: 	linux-%{patch_ver}.tar.bz2
 
 Source200:	kernel-rsbac.config
 Source201:	http://download.rsbac.org/code/%{rsbacver}/%{kernelversion}/rsbac-common-%{kernelversion}.%{patchlevel}-%{rsbacver}.tar.bz2
-Source202:	http://download.rsbac.org/code/%{rsbacver}/changes-%{rsbacver}.txt
-Source203:	http://download.rsbac.org/code/%{rsbacver}/admin-changes-%{rsbacver}.txt
+#Source202:	http://download.rsbac.org/code/%{rsbacver}/changes-%{rsbacver}.txt
+#Source203:	http://download.rsbac.org/code/%{rsbacver}/admin-changes-%{rsbacver}.txt
+Source202:     http://download.rsbac.org/code/%{rsbacver}/changes-1.4.2.txt
+Source203:     http://download.rsbac.org/code/%{rsbacver}/admin-changes-1.4.2.txt
 
 ####################################################################
 #
