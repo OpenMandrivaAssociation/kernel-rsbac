@@ -1,4 +1,3 @@
-# -*- Mode: rpm-spec -*-
 #
 # This Specfile is based on kernel-tmb spec done by
 # Thomas Backlund <tmb@mandriva.org>
@@ -9,25 +8,19 @@
 #
 %define kernelversion	2
 %define patchlevel	6
-%define sublevel	31
+%define sublevel	32
 
-# Package release
-%define kbuild		2
+# kernel Makefile extraversion is substituted by
+# kpatch/kgit/kstable wich are either 0 (empty), rc (kpatch),
+# git (kgit, only the number after "git"), or stable release (kstable)
+%define kpatch		0
+%define kgit		0
+%define kstable		0
+
+# this is the releaseversion
+%define kbuild		1
 %define	rsbacver	1.4.3
 
-# kernel Makefile extraversion is substituted by 
-# kpatch/kgit/kstable wich are either 0 (empty), rc (kpatch), git (kgit) 
-# or stable release (kstable)
-%define kpatch		0
-%define kstable		6
-# kernel.org -gitX patch (only the number after "git")
-%define kgit		0
-
-# Used when building update candidates
-#define uclevel uc1
-%define devel_notice %{?uclevel:NOTE: This is work-in-progress (WIP) development kernel.}
-
-# Patch tarball tag
 %define ktag		rsbac
 %define kname 		kernel-%{ktag}
 
@@ -42,8 +35,7 @@
 %define rpmrel		%mkrel %{kbuild}
 %endif
 
-# fakerel above and fakever below never change, they are used to fool
-# rpm/urpmi/smart
+# theese two never change, they are used to fool rpm/urpmi/smart
 %define fakever		1
 %define fakerel		%mkrel 1
 
@@ -64,26 +56,25 @@
 %endif
 %define kverrel   	%{kversion}-%{rpmrel}
 
-# used for not making too long names for rpms or search paths 
+# used for not making too long names for rpms or search paths
 %if %kpatch
 %if %kgit
-%define buildrpmrel     0.%{kpatch}.%{kgit}.%{kbuild}%{?uclevel:.%{uclevel}}%{rpmtag}
+%define buildrpmrel     0.%{kpatch}.%{kgit}.%{kbuild}%{rpmtag}
 %else
-%define buildrpmrel     0.%{kpatch}.%{kbuild}%{?uclevel:.%{uclevel}}%{rpmtag}
+%define buildrpmrel     0.%{kpatch}.%{kbuild}%{rpmtag}
 %endif
 %else
-%define buildrpmrel     %{kbuild}%{?uclevel:.%{uclevel}}%{rpmtag}
+%define buildrpmrel     %{kbuild}%{rpmtag}
 %endif
 %define buildrel     	%{kversion}-%{buildrpmrel}
 
-# having different top level names for packges means that you have to remove
-# them by hard :(
+# having different top level names for packges means that you have to remove them by hard :(
 %define top_dir_name 	%{kname}-%{_arch}
 
 %define build_dir 	${RPM_BUILD_DIR}/%{top_dir_name}
 %define src_dir 	%{build_dir}/linux-%{tar_ver}
 
-# disable useless debug rpms...
+# Disable useless debug rpms...
 %define _enable_debug_packages 	%{nil}
 %define debug_package 		%{nil}
 
@@ -95,9 +86,9 @@
 # Make kernel packages backportable
 %if %{mdkversion} < 201000
 # disable debug rpms for backports, it's enough already having them on cooker/stable
-%define build_debug            0
+%define build_debug 		0
 %else
-%define build_debug            1
+%define build_debug 		1
 %endif
 
 # Build desktop i586 / 4GB
@@ -197,16 +188,30 @@ Source201:	http://download.rsbac.org/code/%{rsbacver}/%{kernelversion}/rsbac-com
 # Pre linus patch: ftp://ftp.kernel.org/pub/linux/kernel/v2.6/testing
 
 %if %kpatch
-Patch1:		ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/testing/patch-%{kernelversion}.%{patchlevel}.%{sublevel}-%{kpatch}.bz2
-Source10: 	ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/testing/patch-%{kernelversion}.%{patchlevel}.%{sublevel}-%{kpatch}.bz2.sign
+%if %kstable
+
+Patch2:		ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/stable-review/patch-%{kversion}-%{kpatch}.bz2
+Source11:	ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/stable-review/patch-%{kversion}-%{kpatch}.bz2.sign
+%else
+Patch1:		ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/testing/patch-%{kversion}-%{kpatch}.bz2
+Source10: 	ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/testing/patch-%{kversion}-%{kpatch}.bz2.sign
+%endif
 %endif
 %if %kgit
 Patch2:		ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/snapshots/patch-%{kernelversion}.%{patchlevel}.%{sublevel}-%{kpatch}-git%{kgit}.bz2
 Source11:	ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/snapshots/patch-%{kernelversion}.%{patchlevel}.%{sublevel}-%{kpatch}-git%{kgit}.bz2.sign
 %endif
 %if %kstable
+%if %kpatch
+%define prev_stable %(expr %{kstable} - 1)
+%if %prev_stable
+Patch1:   	ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/patch-%{kernelversion}.%{patchlevel}.%{sublevel}.%{prev_stable}.bz2
+Source10: 	ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/patch-%{kernelversion}.%{patchlevel}.%{sublevel}.%{prev_stable}.bz2.sign
+%endif
+%else
 Patch1:   	ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/patch-%{kversion}.bz2
 Source10: 	ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/patch-%{kversion}.bz2.sign
+%endif
 %endif
 
 #END
@@ -236,7 +241,7 @@ Please read more information in RSBAC home page: http://www.rsbac.org \
 %define requires4	sysfsutils >= 1.3.0-1
 %define requires5	kernel-firmware >= 2.6.27-0.rc2.2mdv
 
-%define kprovides 	%{kname} = %{kverrel}, kernel = %{tar_ver} ,alsa = 1.0.21, drbd-api = 88
+%define kprovides 	%{kname} = %{kverrel}, kernel = %{tar_ver}, alsa = 1.0.21, drbd-api = 88
 
 %define kconflicts	drakxtools-backend < 10.4.190-2
 
@@ -364,6 +369,8 @@ Conflicts:	arch(x86_64)				\
 %endif							\
 Provides:	%{kname}-devel-latest			\
 Provides:	kernel-devel-latest			\
+%{expand:%%{?latest_obsoletes_devel_%{1}:Obsoletes: %{latest_obsoletes_devel_%{1}}}} \
+%{expand:%%{?latest_provides_devel_%{1}:Provides: %{latest_provides_devel_%{1}}}} \
 %description -n %{kname}-%{1}-devel-latest		\
 This package is a virtual rpm that aims to make sure you always have the \
 latest %{kname}-%{1}-devel installed...			\
@@ -428,6 +435,7 @@ EOF							\
 #
 # kernel-desktop586: i586, smp-alternatives, 4GB
 #
+
 %if %build_desktop586
 %define summary_desktop586 Hardened Linux kernel for desktop use with i586 & 4GB RAM RAM and enhanced by RSBAC
 %define info_desktop586 This kernel is compiled for desktop use, single or \
@@ -503,7 +511,7 @@ Group: 		Development/Kernel
 Autoreqprov: 	no
 Provides: 	kernel-source = %{kverrel}, kernel-devel = %{kverrel}
 Provides: 	%{kname}-source = %{kverrel}, %{kname}-devel = %{kverrel}
-%ifarch %{ix86}	
+%ifarch %{ix86}
 Conflicts:	arch(x86_64)
 %endif
 
@@ -555,7 +563,7 @@ Summary: 	Virtual rpm for latest %{kname}-source
 Group:   	Development/Kernel
 Requires: 	%{kname}-source-%{buildrel}
 Provides:	kernel-source-%{buildrel} = %{kversion}
-%ifarch %{ix86}	
+%ifarch %{ix86}
 Conflicts:	arch(x86_64)
 %endif
 
@@ -566,25 +574,25 @@ latest %{kname}-source installed...
 %common_description_info
 %endif
 
-%if %build_doc
 #
 # kernel-doc: documentation for the Linux kernel
 #
+%if %build_doc
 %package -n %{kname}-doc
 Version: 	%{kversion}
 Release: 	%{rpmrel}
 Summary: 	Various documentation bits found in the %{kname} source
 Group: 		Books/Computer books
 Provides:	kernel-doc = %{kversion}
-%ifarch %{ix86}	
+%ifarch %{ix86}
 Conflicts:	arch(x86_64)
 %endif
 
 %description -n %{kname}-doc
-This package contains documentation files from the %{kname} source. 
-Various bits of information about the Linux kernel and the device drivers 
-shipped with it are documented in these files. You also might want install 
-this package if you need a reference to the options that can be passed to 
+This package contains documentation files from the %{kname} source.
+Various bits of information about the Linux kernel and the device drivers
+shipped with it are documented in these files. You also might want install
+this package if you need a reference to the options that can be passed to
 Linux kernel modules at load time.
 
 %common_description_info
@@ -603,14 +611,23 @@ Linux kernel modules at load time.
 %define patches_dir ../%{patch_ver}/
 
 cd %src_dir
+
+%if %kstable
+%if %kpatch
+%if %prev_stable
+%patch1 -p1
+%endif
+%patch2 -p1
+%else
+%patch1 -p1
+%endif
+%else
 %if %kpatch
 %patch1 -p1
 %endif
+%endif
 %if %kgit
 %patch2 -p1
-%endif
-%if %kstable
-%patch1 -p1
 %endif
 
 #RSBAC
@@ -639,12 +656,19 @@ sed 's/^.*CONFIG_CRYPTO_SHA1=.*$/CONFIG_CRYPTO_SHA1=y/' -i .config
 sed -i  's/\(CONFIG_DRM_[A-Z0-9]\+_KMS\)=y/# \1 is not set/' \
         %{patches_dir}/configs/*.config
 %endif
+%if %{mdkversion} < 201010
+# cups 1.4.x doesn't need usblp anymore, 2010.0 has cups 1.4.x but it is
+# patched to still handle the situation of usblp in kernel
+sed -i  's/^# CONFIG_USB_PRINTER is not set/CONFIG_USB_PRINTER=m/' \
+        %{patches_dir}/configs/*.config
+%endif
 
 %if %build_debug
 %define debug --debug
 %else
 %define debug --no-debug
 %endif
+
 
 %{patches_dir}/scripts/create_configs %debug --user_cpu="%{target_arch}"
 
@@ -734,7 +758,6 @@ BuildKernel() {
 	# remove /lib/firmware, we use a separate kernel-firmware
 	rm -rf %{temp_root}/lib/firmware
 }
-
 
 SaveDevel() {
 	devel_flavour=$1
@@ -1114,7 +1137,7 @@ cp -a %{temp_root} %{buildroot}
 
 # Create directories infastructure
 %if %build_source
-install -d %{target_source} 
+install -d %{target_source}
 
 tar cf - . | tar xf - -C %{target_source}
 chmod -R a+rX %{target_source}
@@ -1190,10 +1213,10 @@ popd
 rm -rf %{buildroot}
 
 
-# We don't want to remove this, the whole reason of its existence is to be 
-# able to do several rpm --short-circuit -bi for testing install 
+# We don't want to remove this, the whole reason of its existence is to be
+# able to do several rpm --short-circuit -bi for testing install
 # phase without repeating compilation phase
-#rm -rf %{temp_root} 
+#rm -rf %{temp_root}
 
 ###
 ### source and doc file lists
