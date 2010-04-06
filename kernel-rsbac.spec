@@ -15,7 +15,7 @@
 # git (kgit, only the number after "git"), or stable release (kstable)
 %define kpatch		0
 %define kgit		0
-%define kstable		1
+%define kstable		2
 
 # this is the releaseversion
 %define kbuild		1
@@ -203,7 +203,7 @@ http://www.mandriva.com/en/security/kernelupdate			\
 This kernel include the RSBAC system. RSBAC is a flexible, powerful and \
 fast (low overhead) open source access control framework for Linux kernels \
 but this security solution is a very complex system: \
-please don't use this kernel by newbie user. \
+please do not use this kernel by newbie user. \
 Please read more information in RSBAC home page: http://www.rsbac.org \
 									\
 %{devel_notice}
@@ -507,6 +507,9 @@ cd %src_dir
 for I in `find %{patches_dir}/configs/ -type f` ; do
 	sed 's/^.*CONFIG_CRYPTO_SHA1=.*$/CONFIG_CRYPTO_SHA1=y/' -i ${I}
 	cat %{SOURCE200} >> ${I}
+	for N in B43_FORCE_PIO ; do
+		sed "s/^#\(${N}.*\)$/\1=y/" -i ${I}
+	done
 done
 cat %{SOURCE200} >> .config
 sed 's/^.*CONFIG_CRYPTO_SHA1=.*$/CONFIG_CRYPTO_SHA1=y/' -i .config
