@@ -507,9 +507,6 @@ cd %src_dir
 for I in `find %{patches_dir}/configs/ -type f` ; do
 	sed 's/^.*CONFIG_CRYPTO_SHA1=.*$/CONFIG_CRYPTO_SHA1=y/' -i ${I}
 	cat %{SOURCE200} >> ${I}
-	for N in B43_FORCE_PIO ; do
-		sed "s/^#\(${N}.*\)$/\1=y/" -i ${I}
-	done
 done
 cat %{SOURCE200} >> .config
 sed 's/^.*CONFIG_CRYPTO_SHA1=.*$/CONFIG_CRYPTO_SHA1=y/' -i .config
