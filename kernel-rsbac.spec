@@ -154,8 +154,8 @@ Source2: 	disable-mrproper-in-devel-rpms.patch
 # This is for disabling the rest of the scripts in -devel rpms
 Source3:	disable-prepare-scripts-configs-in-devel-rpms.patch
 
-Source4: 	README.kernel-sources
-Source5: 	README.MandrivaLinux
+Source4: 	README.kernel-%{ktag}-sources
+Source5: 	README.Mandriva_Linux_%{ktag}
 
 # This is for keeping asm-offsets.h and bounds.h in -devel rpms
 Source6: 	kbuild-really-dont-remove-bounds-asm-offsets-headers.patch
@@ -723,8 +723,8 @@ $DevelRoot/.config
 $DevelRoot/Kbuild
 $DevelRoot/Makefile
 $DevelRoot/Module.symvers
-%doc README.MandrivaLinux
-%doc README.kernel-sources
+%doc README.Mandriva_Linux_%{ktag}
+%doc README.kernel-%{ktag}-sources
 EOF
 
 
@@ -1021,8 +1021,8 @@ rm -rf %{buildroot}
 %{_kerneldir}/Makefile
 %{_kerneldir}/README
 %{_kerneldir}/REPORTING-BUGS
-%doc README.MandrivaLinux
-%doc README.kernel-sources
+%doc README.Mandriva_Linux_%{ktag}
+%doc README.kernel-%{ktag}-sources
 
 %files -n %{kname}-source-latest
 %defattr(-,root,root)
