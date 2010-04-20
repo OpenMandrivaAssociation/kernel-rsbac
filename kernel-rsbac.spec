@@ -18,7 +18,7 @@
 %define kstable		2
 
 # this is the releaseversion
-%define kbuild		1
+%define kbuild		2
 %define	rsbacver	1.4.3
 
 %define ktag		rsbac
@@ -258,6 +258,7 @@ Conflicts:	arch(x86_64)				\
 Summary:	The kernel-devel files for %{kname}-%{1}-%{buildrel} \
 Group:		Development/Kernel			\
 Provides:	kernel-devel = %{kverrel} 		\
+Provides:	kernel-rsbac-devel = %{kverrel} 	\
 %description -n %{kname}-%{1}-devel-%{buildrel}		\
 This package contains the kernel-devel files that should be enough to build \
 3rdparty drivers against for use with %{kname}-%{1}-%{buildrel}. \
