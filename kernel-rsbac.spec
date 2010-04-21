@@ -18,8 +18,8 @@
 %define kstable		2
 
 # this is the releaseversion
-%define kbuild		2
-%define	rsbacver	1.4.3
+%define kbuild		3
+%define	rsbacver	1.4.4
 
 %define ktag		rsbac
 %define kname 		kernel-%{ktag}
