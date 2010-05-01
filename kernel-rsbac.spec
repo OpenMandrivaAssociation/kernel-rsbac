@@ -15,10 +15,10 @@
 # git (kgit, only the number after "git"), or stable release (kstable)
 %define kpatch		0
 %define kgit		0
-%define kstable		2
+%define kstable		3
 
 # this is the releaseversion
-%define kbuild		3
+%define kbuild		1
 %define	rsbacver	1.4.4
 
 %define ktag		rsbac
