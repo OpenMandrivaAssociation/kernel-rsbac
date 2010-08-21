@@ -8,18 +8,18 @@
 #
 %define kernelversion	2
 %define patchlevel	6
-%define sublevel	34
+%define sublevel	35
 
 # kernel Makefile extraversion is substituted by
 # kpatch/kgit/kstable wich are either 0 (empty), rc (kpatch),
 # git (kgit, only the number after "git"), or stable release (kstable)
 %define kpatch		0
 %define kgit		0
-%define kstable		1
+%define kstable		3
 
 # this is the releaseversion
 %define kbuild		1
-%define	rsbacver	1.4.4
+%define rsbacver	1.4.5
 
 %define ktag		rsbac
 %define kname 		kernel-%{ktag}
@@ -163,7 +163,7 @@ Source6: 	kbuild-really-dont-remove-bounds-asm-offsets-headers.patch
 Source100: 	linux-%{patch_ver}.tar.bz2
 
 Source200:	kernel-rsbac.config
-Source201:	http://download.rsbac.org/code/%{rsbacver}/%{kernelversion}/rsbac-common-%{kernelversion}.%{patchlevel}-%{rsbacver}.tar.bz2
+Source201:	http://download.rsbac.org/code/%{rsbacver}/%{kernelversion}/rsbac-common-%{kernelversion}.%{patchlevel}-%{rsbacver}.tar.bz2 
 
 ####################################################################
 #
