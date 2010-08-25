@@ -149,10 +149,8 @@ Source1: 	ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/
 %if %build_nosrc
 NoSource: 0
 %endif
-# This is for disabling mrproper in -devel rpms
-Source2: 	disable-mrproper-in-devel-rpms.patch
-# This is for disabling the rest of the scripts in -devel rpms
-Source3:	disable-prepare-scripts-configs-in-devel-rpms.patch
+# This is for disabling *config, mrproper, prepare, scripts on -devel rpms
+Source2: 	disable-mrproper-prepare-scripts-configs-in-devel-rpms.patch
 
 Source4: 	README.kernel-%{ktag}-sources
 Source5: 	README.Mandriva_Linux_%{ktag}
@@ -214,7 +212,7 @@ Please read more information in RSBAC home page: http://www.rsbac.org \
 %define requires3 	sysfsutils >= 1.3.0-1 module-init-tools >= 3.2-0.pre8.2
 %define requires4	kernel-firmware >= 20090604-4mnb2
 
-%define kprovides 	%{kname} = %{kverrel}, kernel = %{tar_ver}, drbd-api = 88
+%define kprovides 	%{kname} = %{kverrel}, kernel = %{tar_ver}, alsa = 1.0.23, drbd-api = 88
 
 BuildRoot: 		%{_tmppath}/%{kname}-%{kversion}-%{_arch}-build
 %define buildroot	%{_tmppath}/%{kname}-%{kversion}-%{_arch}-build
@@ -660,8 +658,6 @@ SaveDevel() {
 
 	# disable mrproper in -devel rpms
 	patch -p1 -d $TempDevelRoot -i %{SOURCE2}
-	# disable the rest of the scripts in -devel rpms
-	patch -p1 -d $TempDevelRoot -i %{SOURCE3}
 
 	kernel_devel_files=../kernel_devel_files.$devel_flavour
 
