@@ -15,7 +15,7 @@
 # git (kgit, only the number after "git"), or stable release (kstable)
 %define kpatch		0
 %define kgit		0
-%define kstable		4
+%define kstable		5
 
 # this is the releaseversion
 %define kbuild		1
@@ -506,9 +506,13 @@ cd %src_dir
 for I in `find %{patches_dir}/configs/ -type f` ; do
 	sed 's/^.*CONFIG_CRYPTO_SHA1=.*$/CONFIG_CRYPTO_SHA1=y/' -i ${I}
 	cat %{SOURCE200} >> ${I}
+	# BUG: http://bugtracker.rsbac.org/view.php?id=138
+	grep INFINIBAND ${I} | sed 's/^\(CONFIG.*_INFINIBAND[^=]*\)=.*/\# \1 is not set/g'
 done
 cat %{SOURCE200} >> .config
 sed 's/^.*CONFIG_CRYPTO_SHA1=.*$/CONFIG_CRYPTO_SHA1=y/' -i .config
+# BUG: http://bugtracker.rsbac.org/view.php?id=138
+grep INFINIBAND .config | sed 's/^\(CONFIG.*_INFINIBAND[^=]*\)=.*/\# \1 is not set/g'
 #
 
 %{patches_dir}/scripts/apply_patches
