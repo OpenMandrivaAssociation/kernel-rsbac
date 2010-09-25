@@ -507,12 +507,12 @@ for I in `find %{patches_dir}/configs/ -type f` ; do
 	sed 's/^.*CONFIG_CRYPTO_SHA1=.*$/CONFIG_CRYPTO_SHA1=y/' -i ${I}
 	cat %{SOURCE200} >> ${I}
 	# BUG: http://bugtracker.rsbac.org/view.php?id=138
-	grep INFINIBAND ${I} | sed 's/^\(CONFIG.*_INFINIBAND[^=]*\)=.*/\# \1 is not set/g'
+	sed 's/^\(CONFIG.*_INFINIBAND[^=]*\)=.*/\# \1 is not set/g' ${I}
 done
 cat %{SOURCE200} >> .config
 sed 's/^.*CONFIG_CRYPTO_SHA1=.*$/CONFIG_CRYPTO_SHA1=y/' -i .config
 # BUG: http://bugtracker.rsbac.org/view.php?id=138
-grep INFINIBAND .config | sed 's/^\(CONFIG.*_INFINIBAND[^=]*\)=.*/\# \1 is not set/g'
+sed 's/^\(CONFIG.*_INFINIBAND[^=]*\)=.*/\# \1 is not set/g' -i .config
 #
 
 %{patches_dir}/scripts/apply_patches
