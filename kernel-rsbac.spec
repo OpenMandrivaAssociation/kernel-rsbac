@@ -1016,7 +1016,7 @@ rm -rf %{buildroot}
 %{_kerneldir}/COPYING
 %{_kerneldir}/CREDITS
 %{_kerneldir}/Kbuild
-%{_kerneldir}/Kconfig
+#%{_kerneldir}/Kconfig
 %{_kerneldir}/MAINTAINERS
 %{_kerneldir}/Makefile
 %{_kerneldir}/README
