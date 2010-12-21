@@ -149,14 +149,11 @@ Source1: 	ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/
 %if %build_nosrc
 NoSource: 0
 %endif
-# This is for disabling *config, mrproper, prepare, scripts on -devel rpms
+# This is for disabling mrproper in -devel rpms
 Source2: 	disable-mrproper-prepare-scripts-configs-in-devel-rpms.patch
 
 Source4: 	README.kernel-%{ktag}-sources
 Source5: 	README.Mandriva_Linux_%{ktag}
-
-# This is for keeping asm-offsets.h and bounds.h in -devel rpms
-Source6: 	kbuild-really-dont-remove-bounds-asm-offsets-headers.patch
 
 Source100: 	linux-%{patch_ver}.tar.bz2
 
@@ -209,10 +206,10 @@ Please read more information in RSBAC home page: http://www.rsbac.org \
 ### Global Requires/Provides
 %define requires1 	mkinitrd >= 6.0.92-12mnb
 %define requires2 	bootloader-utils >= 1.12-1
-%define requires3 	sysfsutils >= 1.3.0-1 module-init-tools >= 3.2-0.pre8.2
-%define requires4	kernel-firmware >= 20090604-4mnb2
+%define requires3 	sysfsutils >= 1.3.0-1 module-init-tools >= 3.6-12
+%define requires4	kernel-firmware >= 20100217-1mnb2
 
-%define kprovides 	%{kname} = %{kverrel}, kernel = %{tar_ver}, alsa = 1.0.23, drbd-api = 88
+%define kprovides 	%{kname} = %{kverrel}, kernel = %{tar_ver}, drbd-api = 88
 
 BuildRoot: 		%{_tmppath}/%{kname}-%{kversion}-%{_arch}-build
 %define buildroot	%{_tmppath}/%{kname}-%{kversion}-%{_arch}-build
@@ -400,7 +397,7 @@ processor mode, use the "nosmp" boot parameter.
 %package -n %{kname}-source-%{buildrel}
 Version: 	%{fakever}
 Release: 	%{fakerel}
-Requires: 	glibc-devel, ncurses-devel, make, gcc, perl
+Requires: 	glibc-devel, ncurses-devel, make, gcc, perl, diffutils
 Summary: 	The Linux source code for %{kname}-%{buildrel}
 Group: 		Development/Kernel
 Autoreqprov: 	no
@@ -468,6 +465,7 @@ Version: 	%{kversion}
 Release: 	%{rpmrel}
 Summary: 	Various documentation bits found in the %{kname} source
 Group: 		Books/Computer books
+Buildarch:	noarch
 
 %description -n %{kname}-doc
 This package contains documentation files from the %{kname} source.
@@ -516,6 +514,7 @@ sed 's/^\(CONFIG.*_INFINIBAND[^=]*\)=.*/\# \1 is not set/g' -i .config
 #
 
 %{patches_dir}/scripts/apply_patches
+
 
 # PATCH END
 
@@ -639,15 +638,13 @@ SaveDevel() {
 	cp -fR drivers/acpi/acpica/*.h $TempDevelRoot/drivers/acpi/acpica/
 
 	for i in alpha arm arm26 avr32 blackfin cris frv h8300 ia64 microblaze mips m32r m68k \
-		 m68knommu mn10300 parisc powerpc ppc s390 sh sh64 score sparc v850 xtensa; do
+		 m68knommu mn10300 parisc powerpc ppc s390 sh sh64 score sparc tile v850 xtensa; do
 		rm -rf $TempDevelRoot/arch/$i
 	done
 
 	%ifnarch %{ix86} x86_64
 		rm -rf $TempDevelRoot/arch/x86
 	%endif
-	# disable removal of asm-offsets.h and bounds.h
-	patch -p1 -d $TempDevelRoot -i %{SOURCE6}
 
 	# Clean the scripts tree, and make sure everything is ok (sanity check)
 	# running prepare+scripts (tree was already "prepared" in build)
@@ -722,6 +719,7 @@ $DevelRoot/usr
 $DevelRoot/virt
 $DevelRoot/.config
 $DevelRoot/Kbuild
+$DevelRoot/Kconfig
 $DevelRoot/Makefile
 $DevelRoot/Module.symvers
 %doc README.Mandriva_Linux_%{ktag}
@@ -914,7 +912,7 @@ chmod -R a+rX %{target_source}
 # we remove all the source files that we don't ship
 # first architecture files
 for i in alpha arm arm26 avr32 blackfin cris frv h8300 ia64 microblaze mips m32r m68k \
-	 m68knommu mn10300 parisc powerpc ppc s390 sh sh64 score sparc v850 xtensa; do
+	 m68knommu mn10300 parisc powerpc ppc s390 sh sh64 score sparc tile v850 xtensa; do
 	rm -rf %{target_source}/arch/$i
 done
 
@@ -1018,6 +1016,7 @@ rm -rf %{buildroot}
 %{_kerneldir}/COPYING
 %{_kerneldir}/CREDITS
 %{_kerneldir}/Kbuild
+%{_kerneldir}/Kconfig
 %{_kerneldir}/MAINTAINERS
 %{_kerneldir}/Makefile
 %{_kerneldir}/README
