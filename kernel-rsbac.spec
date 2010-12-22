@@ -719,7 +719,7 @@ $DevelRoot/usr
 $DevelRoot/virt
 $DevelRoot/.config
 $DevelRoot/Kbuild
-$DevelRoot/Kconfig
+#$DevelRoot/Kconfig
 $DevelRoot/Makefile
 $DevelRoot/Module.symvers
 %doc README.Mandriva_Linux_%{ktag}
