@@ -18,7 +18,7 @@
 %define kstable		2
 
 # this is the releaseversion
-%define kbuild		1
+%define kbuild		2
 %define rsbacver	1.4.5
 
 %define ktag		rsbac
@@ -504,14 +504,9 @@ cd %src_dir
 for I in `find %{patches_dir}/configs/ -type f` ; do
 	sed 's/^.*CONFIG_CRYPTO_SHA1=.*$/CONFIG_CRYPTO_SHA1=y/' -i ${I}
 	cat %{SOURCE200} >> ${I}
-	# BUG: http://bugtracker.rsbac.org/view.php?id=138
-	sed 's/^\(CONFIG.*_INFINIBAND[^=]*\)=.*/\# \1 is not set/g' -i ${I}
 done
 cat %{SOURCE200} >> .config
 sed 's/^.*CONFIG_CRYPTO_SHA1=.*$/CONFIG_CRYPTO_SHA1=y/' -i .config
-# BUG: http://bugtracker.rsbac.org/view.php?id=138
-sed 's/^\(CONFIG.*_INFINIBAND[^=]*\)=.*/\# \1 is not set/g' -i .config
-#
 
 %{patches_dir}/scripts/apply_patches
 
