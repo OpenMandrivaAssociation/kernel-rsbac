@@ -204,10 +204,10 @@ Please read more information in RSBAC home page: http://www.rsbac.org \
 %{devel_notice}
 
 ### Global Requires/Provides
-%define requires1 	mkinitrd >= 6.0.92-12mnb
+%define requires1 	mkinitrd >= 6.0.92-12
 %define requires2 	bootloader-utils >= 1.12-1
-%define requires3 	sysfsutils >= 1.3.0-1 module-init-tools >= 3.6-12
-%define requires4	kernel-firmware >= 20100217-1mnb2
+%define requires3 	sysfsutils >= 1.3.0-1 module-init-tools >= 3.6-10
+%define requires4	kernel-firmware >= 20100217-1
 
 %define kprovides 	%{kname} = %{kverrel}, kernel = %{tar_ver}, drbd-api = 88
 
