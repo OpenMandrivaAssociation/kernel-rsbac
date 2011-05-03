@@ -8,14 +8,14 @@
 #
 %define kernelversion	2
 %define patchlevel	6
-%define sublevel	37
+%define sublevel	38
 
 # kernel Makefile extraversion is substituted by
 # kpatch/kgit/kstable wich are either 0 (empty), rc (kpatch),
 # git (kgit, only the number after "git"), or stable release (kstable)
 %define kpatch		0
 %define kgit		0
-%define kstable		0
+%define kstable		5
 
 # this is the releaseversion
 %define kbuild		1
@@ -631,6 +631,9 @@ SaveDevel() {
 
 	# add acpica header files, needed for fglrx build
 	cp -fR drivers/acpi/acpica/*.h $TempDevelRoot/drivers/acpi/acpica/
+
+	# aufs2 has a special file needed
+	cp -fR fs/aufs/magic.mk $TempDevelRoot/fs/aufs
 
 	for i in alpha arm arm26 avr32 blackfin cris frv h8300 ia64 microblaze mips m32r m68k \
 		 m68knommu mn10300 parisc powerpc ppc s390 sh sh64 score sparc tile v850 xtensa; do
