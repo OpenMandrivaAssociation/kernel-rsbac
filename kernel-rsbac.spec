@@ -632,9 +632,6 @@ SaveDevel() {
 	# add acpica header files, needed for fglrx build
 	cp -fR drivers/acpi/acpica/*.h $TempDevelRoot/drivers/acpi/acpica/
 
-	# aufs2 has a special file needed
-	cp -fR fs/aufs/magic.mk $TempDevelRoot/fs/aufs
-
 	for i in alpha arm arm26 avr32 blackfin cris frv h8300 ia64 microblaze mips m32r m68k \
 		 m68knommu mn10300 parisc powerpc ppc s390 sh sh64 score sparc tile v850 xtensa; do
 		rm -rf $TempDevelRoot/arch/$i
@@ -698,6 +695,7 @@ $DevelRoot/include/rsbac
 $DevelRoot/include/rxrpc
 $DevelRoot/include/scsi
 $DevelRoot/include/sound
+$DevelRoot/include/target
 $DevelRoot/include/trace
 $DevelRoot/include/video
 $DevelRoot/include/xen
@@ -993,6 +991,7 @@ rm -rf %{buildroot}
 %{_kerneldir}/include/rxrpc
 %{_kerneldir}/include/scsi
 %{_kerneldir}/include/sound
+%{_kerneldir}/include/target
 %{_kerneldir}/include/trace
 %{_kerneldir}/include/video
 %{_kerneldir}/include/xen
@@ -1031,4 +1030,3 @@ rm -rf %{buildroot}
 %defattr(-,root,root)
 %doc linux-%{tar_ver}/Documentation/*
 %endif
-
