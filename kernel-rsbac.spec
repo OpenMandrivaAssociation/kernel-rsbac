@@ -15,7 +15,7 @@
 # git (kgit, only the number after "git"), or stable release (kstable)
 %define kpatch		0
 %define kgit		0
-%define kstable		5
+%define kstable		6
 
 # this is the releaseversion
 %define kbuild		1
