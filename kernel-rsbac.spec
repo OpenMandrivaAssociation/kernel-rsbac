@@ -18,7 +18,7 @@
 %define kstable		7
 
 # this is the releaseversion
-%define kbuild		1
+%define kbuild		2
 %define rsbacver	1.4.5
 
 %define ktag		rsbac
