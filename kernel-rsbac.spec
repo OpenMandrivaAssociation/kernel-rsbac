@@ -8,14 +8,14 @@
 #
 %define kernelversion	2
 %define patchlevel	6
-%define sublevel	38
+%define sublevel	39
 
 # kernel Makefile extraversion is substituted by
 # kpatch/kgit/kstable wich are either 0 (empty), rc (kpatch),
 # git (kgit, only the number after "git"), or stable release (kstable)
 %define kpatch		0
 %define kgit		0
-%define kstable		8
+%define kstable		3
 
 # this is the releaseversion
 %define kbuild		1
