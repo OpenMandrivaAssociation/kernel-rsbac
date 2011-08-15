@@ -1,4 +1,4 @@
-#
+
 # This Specfile is based on kernel-tmb spec done by
 # Thomas Backlund <tmb@mandriva.org>
 # 
@@ -6,16 +6,15 @@
 #
 # Manbo kernels now use kernel.org versioning
 #
-%define kernelversion	2
-%define patchlevel	6
-%define sublevel	39
+%define kernelversion	3
+%define patchlevel	0
+%define sublevel	1
 
 # kernel Makefile extraversion is substituted by
-# kpatch/kgit/kstable wich are either 0 (empty), rc (kpatch),
-# git (kgit, only the number after "git"), or stable release (kstable)
+# kpatch/kgit wich are either 0 (empty), rc (kpatch),
+# git (kgit, only the number after "git")
 %define kpatch		0
 %define kgit		0
-%define kstable		3
 
 # this is the releaseversion
 %define kbuild		1
@@ -45,13 +44,8 @@
 %define tar_ver	  	%{kernelversion}.%{patchlevel}.%(expr %{sublevel} - 1)
 %define patch_ver 	%{kversion}-%{kpatch}-%{ktag}%{kbuild}
 %else
-%if %kstable
-%define kversion  	%{kernelversion}.%{patchlevel}.%{sublevel}.%{kstable}
-%define tar_ver   	%{kernelversion}.%{patchlevel}.%{sublevel}
-%else
 %define kversion  	%{kernelversion}.%{patchlevel}.%{sublevel}
-%define tar_ver   	%{kversion}
-%endif
+%define tar_ver   	%{kernelversion}.%{patchlevel}
 %define patch_ver 	%{kversion}-%{ktag}%{kbuild}
 %endif
 %define kverrel   	%{kversion}-%{rpmrel}
@@ -68,13 +62,14 @@
 %endif
 %define buildrel     	%{kversion}-%{buildrpmrel}
 
-# having different top level names for packges means that you have to remove them by hard :(
+# Having different top level names for packges means that you have to remove
+# them by hard :(
 %define top_dir_name 	%{kname}-%{_arch}
 
 %define build_dir 	${RPM_BUILD_DIR}/%{top_dir_name}
 %define src_dir 	%{build_dir}/linux-%{tar_ver}
 
-# disable useless debug rpms...
+# Disable useless debug rpms...
 %define _enable_debug_packages 	%{nil}
 %define debug_package 		%{nil}
 
@@ -134,7 +129,7 @@ Version: 	%{kversion}
 Release: 	%{rpmrel}
 License: 	GPLv2
 Group: 	 	System/Kernel and hardware
-ExclusiveArch: 	%{ix86} x86_64
+ExclusiveArch: %{ix86} x86_64
 ExclusiveOS: 	Linux
 URL:		http://www.rsbac.org
 
@@ -149,7 +144,7 @@ Source1: 	ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/
 %if %build_nosrc
 NoSource: 0
 %endif
-# This is for disabling mrproper in -devel rpms
+# This is for disabling *config, mrproper, prepare, scripts on -devel rpms
 Source2: 	disable-mrproper-prepare-scripts-configs-in-devel-rpms.patch
 
 Source4: 	README.kernel-%{ktag}-sources
@@ -178,7 +173,7 @@ Source10: 	ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}
 Patch2:		ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/snapshots/patch-%{kernelversion}.%{patchlevel}.%{sublevel}-%{kpatch}-git%{kgit}.bz2
 Source11:	ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/snapshots/patch-%{kernelversion}.%{patchlevel}.%{sublevel}-%{kpatch}-git%{kgit}.bz2.sign
 %endif
-%if %kstable
+%if %sublevel
 Patch1:   	ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/patch-%{kversion}.bz2
 Source10: 	ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/patch-%{kversion}.bz2.sign
 %endif
@@ -204,17 +199,21 @@ Please read more information in RSBAC home page: http://www.rsbac.org \
 %{devel_notice}
 
 ### Global Requires/Provides
-%define requires1 	mkinitrd >= 6.0.92-12
-%define requires2 	bootloader-utils >= 1.12-1
-%define requires3 	sysfsutils >= 1.3.0-1 module-init-tools >= 3.6-10
-%define requires4	kernel-firmware >= 20100217-1
+%define requires1	bootloader-utils >= 1.13-1
+%define requires2	mkinitrd >= 4.2.17-31
+%define requires3	module-init-tools >= 3.0-7
+%define requires4	sysfsutils >= 1.3.0-1
+%define requires5	kernel-firmware >= 2.6.27-0.rc2.2mdv
 
-%define kprovides 	%{kname} = %{kverrel}, kernel = %{tar_ver}, drbd-api = 88
+%define kprovides 	%{kname} = %{kverrel}, kernel = %{tar_ver}, alsa = 1.0.23, drbd-api = 88
+
+%define kconflicts	drakxtools-backend < 10.4.190-2
+
+%define kobsoletes	dkms-iwlwifi < 1.2.26
 
 BuildRoot: 		%{_tmppath}/%{kname}-%{kversion}-%{_arch}-build
-%define buildroot	%{_tmppath}/%{kname}-%{kversion}-%{_arch}-build
 Autoreqprov: 		no
-BuildRequires: 		gcc >= 4.0.1-5 module-init-tools >= 3.2-0.pre8.2
+BuildRequires: 		gcc module-init-tools
 
 %description
 %common_description_kernel
@@ -230,8 +229,12 @@ BuildRequires: 		gcc >= 4.0.1-5 module-init-tools >= 3.2-0.pre8.2
 Version:	%{fakever}				\
 Release:	%{fakerel}				\
 Provides:	%kprovides				\
-Provides:	should-restart = system			\
 Requires(pre):	%requires1 %requires2 %requires3 %requires4 \
+Requires:	%requires5				\
+Provides:	should-restart = system			\
+Suggests:	crda					\
+Obsoletes:	%kobsoletes				\
+Conflicts:	%kconflicts				\
 %ifarch %{ix86}						\
 Conflicts:	arch(x86_64)				\
 %endif							\
@@ -247,16 +250,17 @@ Group:		System/Kernel and hardware		\
 Version:	%{fakever}				\
 Release:	%{fakerel}				\
 Requires:	glibc-devel ncurses-devel make gcc perl	\
-%ifarch %{ix86}						\
-Conflicts:	arch(x86_64)				\
-%endif							\
 Summary:	The kernel-devel files for %{kname}-%{1}-%{buildrel} \
 Group:		Development/Kernel			\
 Provides:	kernel-devel = %{kverrel} 		\
 Provides:	kernel-rsbac-devel = %{kverrel} 	\
+%ifarch %{ix86}						\
+Conflicts:	arch(x86_64)				\
+%endif							\
 %description -n %{kname}-%{1}-devel-%{buildrel}		\
-This package contains the kernel-devel files that should be enough to build \
-3rdparty drivers against for use with %{kname}-%{1}-%{buildrel}. \
+This package contains the kernel files (headers and build tools) \
+that should be enough to build additional drivers for   \
+use with %{kname}-%{1}-%{buildrel}.                     \
 							\
 If you want to build your own kernel, you need to install the full \
 %{kname}-source-%{buildrel} rpm.			\
@@ -289,6 +293,7 @@ Requires:	%{kname}-%{1}-devel-%{buildrel}		\
 %ifarch %{ix86}						\
 Conflicts:	arch(x86_64)				\
 %endif							\
+Provides:	%{kname}-devel-latest			\
 %description -n %{kname}-%{1}-devel-latest		\
 This package is a virtual rpm that aims to make sure you always have the \
 latest %{kname}-%{1}-devel installed...			\
@@ -324,11 +329,10 @@ EOF							\
 %defattr(-,root,root)					\
 %endif
 
-
+%ifarch %{ix86}
 #
 # kernel-desktop586: i586, smp-alternatives, 4GB
 #
-%ifarch %{ix86}
 %if %build_desktop586
 %define summary_desktop586 Hardened Linux kernel for desktop use with i586 & 4GB RAM and enhanced by RSBAC
 %define info_desktop586 This kernel is compiled for desktop use, single or \
@@ -344,6 +348,7 @@ processor mode, use the "nosmp" boot parameter.
 #
 # kernel-desktop: i686, smp-alternatives, 4 GB / x86_64
 #
+
 %if %build_desktop
 %ifarch %{ix86}
 %define summary_desktop Hardened Linux Kernel for desktop use with i686 & 4GB RAM and enhanced by RSBAC
@@ -408,7 +413,7 @@ Conflicts:	arch(x86_64)
 
 %description -n %{kname}-source-%{buildrel}
 The %{kname}-source package contains the source code files for the %{ktag}
-series Linux kernel. Theese source files are only needed if you want to
+series Linux kernel. Theese source files are only needed if you want to 
 build your own custom kernel that is better tuned to your particular hardware.
 
 If you only want the files needed to build 3rdparty (nVidia, Ati, dkms-*,...)
@@ -496,7 +501,7 @@ cd %src_dir
 %if %kgit
 %patch2 -p1
 %endif
-%if %kstable
+%if %sublevel
 %patch1 -p1
 %endif
 
@@ -510,19 +515,21 @@ sed 's/^.*CONFIG_CRYPTO_SHA1=.*$/CONFIG_CRYPTO_SHA1=y/' -i .config
 
 %{patches_dir}/scripts/apply_patches
 
-
 # PATCH END
+
 
 #
 # Setup Begin
 #
 
 # Prepare all the variables for calling create_configs
+
 %if %build_debug
 %define debug --debug
 %else
 %define debug --no-debug
 %endif
+
 
 %{patches_dir}/scripts/create_configs %debug --user_cpu="%{_arch}"
 
@@ -530,7 +537,7 @@ sed 's/^.*CONFIG_CRYPTO_SHA1=.*$/CONFIG_CRYPTO_SHA1=y/' -i .config
 LC_ALL=C perl -p -i -e "s/^SUBLEVEL.*/SUBLEVEL = %{sublevel}/" Makefile
 
 # get rid of unwanted files
-find . -name '*~' -o -name '*.orig' -o -name '*.append' |%kxargs rm -f
+find . -name '*~' -o -name '*.orig' -o -name '*.append' | %kxargs rm -f
 
 
 %build
@@ -545,32 +552,30 @@ find . -name '*~' -o -name '*.orig' -o -name '*.append' |%kxargs rm -f
 %define temp_boot %{temp_root}%{_bootdir}
 %define temp_modules %{temp_root}%{_modulesdir}
 
-
 PrepareKernel() {
 	name=$1
 	extension=$2
-	echo "Make dep for kernel $extension"
+	x86_dir=arch/x86/configs
+
+	echo "Make config for kernel $extension"
+
 	%smake -s mrproper
 
 	if [ -z "$name" ]; then
-		cp arch/x86/configs/%{_arch}_defconfig-desktop .config
+		cp ${x86_dir}/%{_arch}_defconfig-desktop .config
 	else
-		cp arch/x86/configs/%{_arch}_defconfig-$name .config
+		cp ${x86_dir}/%{_arch}_defconfig-$name .config
 	fi
 
 	# make sure EXTRAVERSION says what we want it to say
-	%if %kstable
-		LC_ALL=C perl -p -i -e "s/^EXTRAVERSION.*/EXTRAVERSION = .%{kstable}-$extension/" Makefile
-	%else
-		LC_ALL=C perl -p -i -e "s/^EXTRAVERSION.*/EXTRAVERSION = -$extension/" Makefile
-	%endif
+	LC_ALL=C perl -p -i -e "s/^EXTRAVERSION.*/EXTRAVERSION = -$extension/" Makefile
 
 	%smake oldconfig
 }
 
-
 BuildKernel() {
 	KernelVer=$1
+
 	echo "Building kernel $KernelVer"
 
 	%kmake all
@@ -579,7 +584,6 @@ BuildKernel() {
 	install -d %{temp_boot}
 	install -m 644 System.map %{temp_boot}/System.map-$KernelVer
 	install -m 644 .config %{temp_boot}/config-$KernelVer
-
 	cp -f arch/%{_arch}/boot/bzImage %{temp_boot}/vmlinuz-$KernelVer
 
 	# modules
@@ -589,7 +593,6 @@ BuildKernel() {
 	# remove /lib/firmware, we use a separate kernel-firmware
 	rm -rf %{temp_root}/lib/firmware
 }
-
 
 SaveDevel() {
 	devel_flavour=$1
@@ -602,6 +605,7 @@ SaveDevel() {
 	for i in $(find . -name 'Kconfig*' -o -name 'Kbuild*' -o -name config.mk); do cp -R --parents $i $TempDevelRoot;done
 	cp -fR include $TempDevelRoot
 	cp -fR scripts $TempDevelRoot
+	cp -fR kernel/bounds.c $TempDevelRoot/kernel
 	%ifarch %{ix86} x86_64
 		cp -fR arch/x86/kernel/asm-offsets.{c,s} $TempDevelRoot/arch/x86/kernel/
 		cp -fR arch/x86/kernel/asm-offsets_{32,64}.c $TempDevelRoot/arch/x86/kernel/
@@ -610,7 +614,6 @@ SaveDevel() {
 		cp -fR arch/%{_arch}/kernel/asm-offsets.{c,s} $TempDevelRoot/arch/%{_arch}/kernel/
 		cp -fR arch/%{_arch}/include $TempDevelRoot/arch/%{_arch}/
 	%endif
-	cp -fR kernel/bounds.c $TempDevelRoot/kernel/
 	cp -fR .config Module.symvers $TempDevelRoot
 #	cp -fR 3rdparty/mkbuild.pl $TempDevelRoot/3rdparty/
 
@@ -620,7 +623,7 @@ SaveDevel() {
 	# Needed for lguest
 	cp -fR drivers/lguest/lg.h $TempDevelRoot/drivers/lguest/
 
-	# Needed for lirc_gpio (Anssi Hannula, #39004, #54907)
+	# Needed for lirc_gpio (#39004)
 	cp -fR drivers/media/video/bt8xx/bttv{,p}.h $TempDevelRoot/drivers/media/video/bt8xx/
 	cp -fR drivers/media/video/bt8xx/bt848.h $TempDevelRoot/drivers/media/video/bt8xx/
 	cp -fR drivers/media/video/btcx-risc.h $TempDevelRoot/drivers/media/video/
@@ -644,9 +647,9 @@ SaveDevel() {
 	# Clean the scripts tree, and make sure everything is ok (sanity check)
 	# running prepare+scripts (tree was already "prepared" in build)
 	pushd $TempDevelRoot >/dev/null
-		%smake -s prepare scripts clean
+		%smake -s prepare scripts
+		%smake -s clean
 	popd >/dev/null
-
 	rm -f $TempDevelRoot/.config.old
 
 	# fix permissions
@@ -750,7 +753,6 @@ CreateFiles() {
 	kernel_flavour=$1
 
 	kernel_files=../kernel_files.$kernel_flavour
-
 
 ### Create the kernel_files.*
 cat > $kernel_files <<EOF
@@ -873,9 +875,9 @@ CreateKernel server
 %endif
 
 
-# kernel-source is shipped as a clean source tree, with no preparation
+# We don't make to repeat the depend code at the install phase
 %if %build_source
-    PrepareKernel "" %{buildrpmrel}%{ktag}custom
+    PrepareKernel "" %{ktag}-custom-%{buildrpmrel}
 %smake -s mrproper
 %endif
 
@@ -900,7 +902,7 @@ cp -a %{temp_root} %{buildroot}
 
 # Create directories infastructure
 %if %build_source
-install -d %{target_source} 
+install -d %{target_source}
 
 tar cf - . | tar xf - -C %{target_source}
 chmod -R a+rX %{target_source}
@@ -908,7 +910,8 @@ chmod -R a+rX %{target_source}
 # we remove all the source files that we don't ship
 # first architecture files
 for i in alpha arm arm26 avr32 blackfin cris frv h8300 ia64 microblaze mips m32r m68k \
-	 m68knommu mn10300 parisc powerpc ppc s390 sh sh64 score sparc tile v850 xtensa; do
+	 m68knommu mn10300 parisc powerpc ppc s390 sh sh64 score sparc tile unicore32 \
+	v850 xtensa; do
 	rm -rf %{target_source}/arch/$i
 done
 
@@ -925,7 +928,7 @@ rm -f %{target_source}/{.config.old,.config.cmd,.mailmap,.missing-syscalls.d,arc
 # We used to have a copy of PrepareKernel here
 # Now, we make sure that the thing in the linux dir is what we want it to be
 for i in %{target_modules}/*; do
-    rm -f $i/build $i/source
+	rm -f $i/build $i/source
 done
 
 # Create modules.description
@@ -956,6 +959,7 @@ rm -rf %{buildroot}
 ###
 ### source and doc file lists
 ###
+
 %if %build_source
 %files -n %{kname}-source-%{buildrel}
 %defattr(-,root,root)
