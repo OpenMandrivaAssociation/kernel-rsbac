@@ -636,7 +636,8 @@ SaveDevel() {
 	cp -fR drivers/acpi/acpica/*.h $TempDevelRoot/drivers/acpi/acpica/
 
 	for i in alpha arm arm26 avr32 blackfin cris frv h8300 ia64 microblaze mips m32r m68k \
-		 m68knommu mn10300 parisc powerpc ppc s390 sh sh64 score sparc tile v850 xtensa; do
+		 m68knommu mn10300 parisc powerpc ppc s390 sh sh64 score sparc tile unicore32 \
+		 v850 xtensa; do
 		rm -rf $TempDevelRoot/arch/$i
 	done
 
