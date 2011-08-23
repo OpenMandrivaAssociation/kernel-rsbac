@@ -150,7 +150,7 @@ Source2: 	disable-mrproper-prepare-scripts-configs-in-devel-rpms.patch
 Source4: 	README.kernel-%{ktag}-sources
 Source5: 	README.Mandriva_Linux_%{ktag}
 
-Source100: 	linux-%{patch_ver}.tar.bz2
+Source100: 	linux-%{patch_ver}.tar.xz
 
 Source200:	kernel-rsbac.config
 Source201:	http://download.rsbac.org/code/%{rsbacver}/%{kernelversion}/rsbac-common-%{kernelversion}.%{patchlevel}-%{rsbacver}.tar.bz2 
