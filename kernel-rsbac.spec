@@ -7,8 +7,8 @@
 # Manbo kernels now use kernel.org versioning
 #
 %define kernelversion	3
-%define patchlevel	0
-%define sublevel	8
+%define patchlevel	1
+%define sublevel	1
 
 # kernel Makefile extraversion is substituted by
 # kpatch/kgit wich are either 0 (empty), rc (kpatch),
@@ -636,8 +636,8 @@ SaveDevel() {
 	cp -fR drivers/acpi/acpica/*.h $TempDevelRoot/drivers/acpi/acpica/
 
 	for i in alpha arm arm26 avr32 blackfin cris frv h8300 ia64 microblaze mips m32r m68k \
-		 m68knommu mn10300 parisc powerpc ppc s390 sh sh64 score sparc tile unicore32 \
-		 v850 xtensa; do
+		 m68knommu mn10300 openrisc parisc powerpc ppc s390 sh sh64 score sparc tile \
+		unicore32 v850 xtensa; do
 		rm -rf $TempDevelRoot/arch/$i
 	done
 
@@ -911,8 +911,8 @@ chmod -R a+rX %{target_source}
 # we remove all the source files that we don't ship
 # first architecture files
 for i in alpha arm arm26 avr32 blackfin cris frv h8300 ia64 microblaze mips m32r m68k \
-	 m68knommu mn10300 parisc powerpc ppc s390 sh sh64 score sparc tile unicore32 \
-	v850 xtensa; do
+	 m68knommu mn10300 openrisc parisc powerpc ppc s390 sh sh64 score sparc tile \
+	unicore32 v850 xtensa; do
 	rm -rf %{target_source}/arch/$i
 done
 
