@@ -7,8 +7,8 @@
 # Manbo kernels now use kernel.org versioning
 #
 %define kernelversion	3
-%define patchlevel	1
-%define sublevel	1
+%define patchlevel	4
+%define sublevel	5
 
 # kernel Makefile extraversion is substituted by
 # kpatch/kgit wich are either 0 (empty), rc (kpatch),
@@ -138,8 +138,8 @@ URL:		http://www.rsbac.org
 # Sources
 #
 ### This is for full SRC RPM
-Source0: 	ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/linux-%{tar_ver}.tar.bz2
-Source1: 	ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/linux-%{tar_ver}.tar.bz2.sign
+Source0: 	ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/linux-%{tar_ver}.tar.xz
+Source1: 	ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/linux-%{tar_ver}.tar.sign
 ### This is for stripped SRC RPM
 %if %build_nosrc
 NoSource: 0
@@ -153,7 +153,7 @@ Source5: 	README.Mandriva_Linux_%{ktag}
 Source100: 	linux-%{patch_ver}.tar.xz
 
 Source200:	kernel-rsbac.config
-Source201:	http://download.rsbac.org/code/%{rsbacver}/%{kernelversion}/rsbac-common-%{kernelversion}.%{patchlevel}-%{rsbacver}.tar.bz2 
+Source201:	http://download.rsbac.org/code/%{rsbacver}/%{kernelversion}/rsbac-common-%{kernelversion}.%{patchlevel}-%{rsbacver}.tar.xz 
 
 ####################################################################
 #
@@ -166,16 +166,16 @@ Source201:	http://download.rsbac.org/code/%{rsbacver}/%{kernelversion}/rsbac-com
 # Pre linus patch: ftp://ftp.kernel.org/pub/linux/kernel/v2.6/testing
 
 %if %kpatch
-Patch1:		ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/testing/patch-%{kernelversion}.%{patchlevel}.%{sublevel}-%{kpatch}.bz2
-Source10: 	ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/testing/patch-%{kernelversion}.%{patchlevel}.%{sublevel}-%{kpatch}.bz2.sign
+Patch1:		ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/testing/patch-%{kernelversion}.%{patchlevel}.%{sublevel}-%{kpatch}.xz
+Source10: 	ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/testing/patch-%{kernelversion}.%{patchlevel}.%{sublevel}-%{kpatch}.sign
 %endif
 %if %kgit
-Patch2:		ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/snapshots/patch-%{kernelversion}.%{patchlevel}.%{sublevel}-%{kpatch}-git%{kgit}.bz2
-Source11:	ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/snapshots/patch-%{kernelversion}.%{patchlevel}.%{sublevel}-%{kpatch}-git%{kgit}.bz2.sign
+Patch2:		ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/snapshots/patch-%{kernelversion}.%{patchlevel}.%{sublevel}-%{kpatch}-git%{kgit}.xz
+Source11:	ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/snapshots/patch-%{kernelversion}.%{patchlevel}.%{sublevel}-%{kpatch}-git%{kgit}.sign
 %endif
 %if %sublevel
-Patch1:   	ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/patch-%{kversion}.bz2
-Source10: 	ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/patch-%{kversion}.bz2.sign
+Patch1:   	ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/patch-%{kversion}.xz
+Source10: 	ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/patch-%{kversion}.sign
 %endif
 
 #END
