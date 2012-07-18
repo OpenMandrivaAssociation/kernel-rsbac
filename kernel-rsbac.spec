@@ -632,6 +632,14 @@ SaveDevel() {
 	cp -fR drivers/media/dvb/dvb-core/*.h $TempDevelRoot/drivers/media/dvb/dvb-core/
 	cp -fR drivers/media/dvb/frontends/lgdt330x.h $TempDevelRoot/drivers/media/dvb/frontends/
 
+	# Need
+	%ifarch %{ix86} x86_64
+	cp -fR arch/x86/syscalls/* $TempDevelRoot/arch/x86/syscalls/
+		cp -fR arch/x86/tools/* $TempDevelRoot/arch/x86/tools/
+		cp -fR tools/include $TempDevelRoot/tools/
+	%endif
+	cp -fR Documentation/DocBook/media/*.b64 $TempDevelRoot/Documentation/DocBook/media/
+
 	# add acpica header files, needed for fglrx build
 	cp -fR drivers/acpi/acpica/*.h $TempDevelRoot/drivers/acpi/acpica/
 
