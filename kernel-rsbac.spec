@@ -643,9 +643,10 @@ SaveDevel() {
 	# add acpica header files, needed for fglrx build
 	cp -fR drivers/acpi/acpica/*.h $TempDevelRoot/drivers/acpi/acpica/
 
-	for i in alpha arm arm26 avr32 blackfin cris frv h8300 ia64 microblaze mips m32r m68k \
-		 m68knommu mn10300 openrisc parisc powerpc ppc s390 sh sh64 score sparc tile \
-		unicore32 v850 xtensa; do
+	for i in alpha arm arm26 avr32 blackfin c6x cris frv h8300 hexagon \
+		 ia64 microblaze mips m32r m68k m68knommu mn10300 openrisc \
+		 parisc powerpc ppc s390 sh sh64 score sparc tile unicore32 \
+		 v850 xtensa; do
 		rm -rf $TempDevelRoot/arch/$i
 	done
 
@@ -699,6 +700,7 @@ $DevelRoot/include/keys
 $DevelRoot/include/linux
 $DevelRoot/include/math-emu
 $DevelRoot/include/media
+$DevelRoot/include/misc
 $DevelRoot/include/mtd
 $DevelRoot/include/net
 $DevelRoot/include/pcmcia
@@ -918,9 +920,9 @@ chmod -R a+rX %{target_source}
 
 # we remove all the source files that we don't ship
 # first architecture files
-for i in alpha arm arm26 avr32 blackfin cris frv h8300 ia64 microblaze mips m32r m68k \
-	 m68knommu mn10300 openrisc parisc powerpc ppc s390 sh sh64 score sparc tile \
-	unicore32 v850 xtensa; do
+for i in alpha arm arm26 avr32 blackfin c6x cris frv h8300 hexagon ia64 \
+	 microblaze mips m32r m68k m68knommu mn10300 openrisc parisc powerpc \
+	 ppc s390 sh sh64 score sparc tile unicore32 v850 xtensa; do
 	rm -rf %{target_source}/arch/$i
 done
 
@@ -996,6 +998,7 @@ rm -rf %{buildroot}
 %{_kerneldir}/include/linux
 %{_kerneldir}/include/math-emu
 %{_kerneldir}/include/media
+%{_kerneldir}/include/misc
 %{_kerneldir}/include/mtd
 %{_kerneldir}/include/net
 %{_kerneldir}/include/pcmcia
