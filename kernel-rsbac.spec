@@ -8,7 +8,7 @@
 #
 %define kernelversion	3
 %define patchlevel	4
-%define sublevel	5
+%define sublevel	6
 
 # kernel Makefile extraversion is substituted by
 # kpatch/kgit wich are either 0 (empty), rc (kpatch),
