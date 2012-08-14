@@ -8,7 +8,7 @@
 #
 %define kernelversion	3
 %define patchlevel	4
-%define sublevel	6
+%define sublevel	8
 
 # kernel Makefile extraversion is substituted by
 # kpatch/kgit wich are either 0 (empty), rc (kpatch),
@@ -138,8 +138,8 @@ URL:		http://www.rsbac.org
 # Sources
 #
 ### This is for full SRC RPM
-Source0: 	ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/linux-%{tar_ver}.tar.xz
-Source1: 	ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.%{patchlevel}/linux-%{tar_ver}.tar.sign
+Source0: 	ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.x/linux-%{tar_ver}.tar.xz
+Source1: 	ftp://ftp.kernel.org/pub/linux/kernel/v%{kernelversion}.x/linux-%{tar_ver}.tar.sign
 ### This is for stripped SRC RPM
 %if %build_nosrc
 NoSource: 0
