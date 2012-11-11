@@ -1,0 +1,8 @@
+disable-mrproper-prepare-scripts-configs-in-devel-rpms.patch
+kernel-rsbac.config
+linux-3.4.8-rsbac1.tar.xz
+linux-3.4.tar.sign
+linux-3.4.tar.xz
+README.kernel-rsbac-sources
+README.Mandriva_Linux_rsbac
+rsbac-common-3.4-1.4.5.tar.xz
