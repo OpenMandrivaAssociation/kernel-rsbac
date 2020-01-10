@@ -513,7 +513,7 @@ done
 cat %{SOURCE200} >> .config
 sed 's/^.*CONFIG_CRYPTO_SHA1=.*$/CONFIG_CRYPTO_SHA1=y/' -i .config
 
-%{patches_dir}/scripts/apply_patches
+%{patches_dir}/scripts/autopatch -p1
 
 # PATCH END
 
