@@ -131,7 +131,7 @@ License: 	GPLv2
 Group: 	 	System/Kernel and hardware
 ExclusiveArch: %{ix86} x86_64
 ExclusiveOS: 	Linux
-URL:		http://www.rsbac.org
+URL:		https://www.rsbac.org
 
 ####################################################################
 #
